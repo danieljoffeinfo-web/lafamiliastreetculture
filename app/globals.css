@@ -150,9 +150,9 @@ a {
   --r: 34px;
 
   position: relative;
-  width: min(92vw, 940px);
+  width: min(84vw, 820px);
   /* Sized to the 1400x600 hero canvas so there is no dead band above the shoe. */
-  height: min(52svh, 440px);
+  height: min(50svh, 400px);
   margin-inline: auto;
   touch-action: pan-y;
 }
@@ -215,18 +215,26 @@ a {
 
 .wordmark {
   position: absolute;
-  left: 50%;
+  left: 0;
+  right: 0;
   bottom: 0;
-  translate: -50% 22%;
+  translate: 0 14%;
   z-index: 2;
   margin: 0;
-  font-family: var(--display);
-  font-size: clamp(2.6rem, 12.2vw, 10.5rem);
-  line-height: 0.86;
-  letter-spacing: 0.055em;
-  text-indent: 0.055em;
-  white-space: nowrap;
   pointer-events: none;
+}
+
+.wordmark svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.wordmark text {
+  font-family: var(--display);
+  font-size: 118px;
+  fill: var(--ink);
 }
 
 /* --------------------------------------------------------------- CTAs */
@@ -386,11 +394,10 @@ a {
   }
   .stage {
     width: 100%;
-    height: min(30svh, 200px);
+    height: min(26svh, 180px);
   }
   .wordmark {
-    font-size: clamp(2.2rem, 13vw, 4rem);
-    translate: -50% 16%;
+    translate: 0 18%;
   }
   .cta-row {
     gap: 10px;

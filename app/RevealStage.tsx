@@ -139,7 +139,19 @@ export default function RevealStage() {
       <div className="stage-ring" aria-hidden="true" />
       <div className="stage-dot" aria-hidden="true" />
 
-      <h1 className="wordmark">LA FAMILIA</h1>
+      {/*
+        Drawn as SVG text locked to textLength, so the wordmark is always exactly
+        as wide as the shoe above it — no font-size guessing against the viewport,
+        and no reflow when the webfont lands.
+      */}
+      <h1 className="wordmark">
+        <svg viewBox="0 0 1000 100" aria-hidden="true">
+          <text x="0" y="93" textLength="1000" lengthAdjust="spacing">
+            LA FAMILIA
+          </text>
+        </svg>
+        <span className="sr-only">La Familia</span>
+      </h1>
     </div>
   )
 }

@@ -11,14 +11,14 @@ export const SITE = {
   name: 'La Familia',
   tagline: 'La Familia Street Culture',
   est: 'EST. 2014 · CAPE TOWN',
-  drop: 'JORDAN IV · KAWS',
+  drop: 'AIR FORCE 1 · LOUIS VUITTON',
 
   /** Hero mouseover reveal: `reveal` is uncovered by the lens that follows the cursor. */
   hero: {
     base: `${CLD}/${TX}/v1786550076/Image_9_-_Edited_derkgm.png`,
     reveal: `${CLD}/${TX}/v1786550055/Image_10_-_Edited_llujre.png`,
-    baseAlt: 'Grey suede Jordan IV, side profile',
-    revealAlt: 'Brown and gold Jordan IV, side profile',
+    baseAlt: 'White Air Force 1, side profile',
+    revealAlt: 'Gold Louis Vuitton monogram Air Force 1, side profile',
   },
 
   nav: [

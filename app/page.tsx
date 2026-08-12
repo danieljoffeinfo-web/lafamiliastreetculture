@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import BrandMark from './BrandMark'
 import RevealStage from './RevealStage'
 import { SITE } from '@/lib/site'
 
@@ -7,8 +6,8 @@ export default function Home() {
   return (
     <div className="shell">
       <header className="header">
+        {/* Drop the real lion crest in here beside the wordmark when you have the file. */}
         <Link href="/" className="brand" aria-label={`${SITE.name} — home`}>
-          <BrandMark />
           <span className="brand-word">{SITE.name}</span>
         </Link>
 
