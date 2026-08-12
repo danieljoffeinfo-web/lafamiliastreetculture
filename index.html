@@ -152,6 +152,8 @@
       padding: 13px 34px;
       font-size: 9px; font-weight: 700; letter-spacing: 3.5px;
       text-transform: uppercase; border: none; cursor: none;
+      /* The CTA is an <a> now, so kill the default underline. */
+      text-decoration: none; display: inline-block;
       transition: transform .18s ease, background .2s, color .2s, border-color .2s;
     }
     .btn:hover { transform: translateY(-2px); }
