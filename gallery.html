@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — La Familia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:      #ffffff;
+      --surface: #f7f7f7;
+      --black:   #080808;
+      --muted:   #888888;
+      --dim:     #cccccc;
+      --border:  rgba(0,0,0,0.07);
+      --border-s: rgba(0,0,0,0.14);
+      --red:     #c8372d;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overscroll-behavior: none;
+    }
+    body {
+      background: var(--bg);
+      color: var(--black);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      overscroll-behavior: none;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 52px; height: 60px;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      opacity: 0; animation: fadeIn .5s ease .1s forwards;
+    }
+    .nav-left {
+      font-family: 'Anton', sans-serif;
+      font-size: 16px; letter-spacing: .12em; text-transform: uppercase; color: var(--black);
+    }
+    .nav-links { display: flex; gap: 36px; list-style: none; position: absolute; left: 50%; transform: translateX(-50%); }
+    .nav-links a {
+      text-decoration: none; font-size: 10px; font-weight: 700;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: #000000; transition: opacity .2s;
+    }
+    .nav-links a:hover { opacity: .6; }
+    .nav-links a.active { color: #000000; }
+    .nav-right { display: flex; align-items: center; gap: 18px; }
+    .nav-icon {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); transition: color .2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-icon:hover { color: var(--black); }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative; width: 100vw; height: 100vh;
+      overflow: hidden; display: flex; align-items: flex-end;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover;
+      /* Optimal custom image: 1920 × 1080px (16:9 landscape) */
+      transform: scale(1.06);
+      animation: heroZoom 1.8s cubic-bezier(.22,.61,.36,1) .2s forwards;
+      will-change: transform;
+    }
+    @keyframes heroZoom { to { transform: scale(1); } }
+
+    .hero-overlay {
+      display: none;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      padding: 0 52px 72px; width: 100%;
+    }
+    .hero-eyebrow {
+      font-size: 9px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--red); margin-bottom: 16px;
+      opacity: 0; animation: fadeIn .6s ease 1s forwards;
+    }
+    .hero-title {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(72px, 10vw, 148px);
+      letter-spacing: .03em; line-height: .92; color: #ffffff;
+      text-shadow: 0 2px 32px rgba(0,0,0,0.25);
+      clip-path: inset(0 100% 0 0);
+      animation: sweepR 1s cubic-bezier(.76,0,.24,1) .7s forwards;
+    }
+    .hero-sub {
+      font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.75);
+      letter-spacing: 1.5px; text-transform: uppercase; margin-top: 20px;
+      opacity: 0; animation: fadeIn .6s ease 1.3s forwards;
+    }
+    .hero-count {
+      position: absolute; top: 50%; right: 52px; transform: translateY(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 2;
+      opacity: 0; animation: fadeIn .6s ease 1.6s forwards;
+    }
+    .hero-count-num {
+      font-family: 'Anton', sans-serif; font-size: 48px;
+      letter-spacing: .04em; color: #ffffff; line-height: 1;
+    }
+    .hero-count-label {
+      font-size: 8px; font-weight: 600; letter-spacing: 3px;
+      text-transform: uppercase; color: rgba(255,255,255,0.6);
+      writing-mode: vertical-lr; transform: rotate(180deg);
+    }
+
+    /* Hero ticker */
+    .hero-ticker {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+      height: 32px; background: rgba(255,255,255,0.75);
+      border-top: 1px solid var(--border);
+      overflow: hidden; display: flex; align-items: center;
+      opacity: 0; animation: fadeIn .5s ease 1.8s forwards;
+      backdrop-filter: blur(6px);
+    }
+    .ticker-track {
+      display: flex; white-space: nowrap;
+      animation: tickerScroll 30s linear infinite;
+    }
+    .ticker-track s {
+      display: inline-block;
+      font-size: 9px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--black);
+      padding: 0 24px; text-decoration: none;
+    }
+    .ticker-track em { color: var(--red); font-style: normal; padding: 0 6px; }
+
+    /* ── About ── */
+    .about {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+    .about-left {
+      padding: 80px 52px; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .about-super {
+      font-size: 9px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--red); margin-bottom: 24px;
+    }
+    .about-headline {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(52px, 5.5vw, 84px);
+      letter-spacing: .04em; line-height: .92; color: var(--black);
+    }
+    .about-right {
+      padding: 80px 52px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .about-body {
+      font-size: 15px; font-weight: 300; color: var(--muted);
+      line-height: 1.75; max-width: 400px; margin-bottom: 48px;
+    }
+    .about-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .stat-num {
+      font-family: 'Anton', sans-serif; font-size: 36px;
+      letter-spacing: .04em; color: var(--black); line-height: 1; display: block;
+    }
+    .stat-label {
+      font-size: 8px; font-weight: 600; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--muted); margin-top: 6px; display: block;
+    }
+
+    /* ── Gallery Header ── */
+    .gallery-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 52px; border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky; top: 60px; z-index: 100;
+    }
+    .gallery-label {
+      font-size: 9px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .gallery-count-label {
+      font-size: 9px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--dim);
+    }
+
+    /* ── Gallery Grid ── */
+    .gallery-grid {
+      columns: 3; column-gap: 2px;
+      background: var(--border);
+      padding: 0;
+    }
+    .g-item {
+      break-inside: avoid; margin-bottom: 2px;
+      position: relative; overflow: hidden; cursor: pointer;
+      opacity: 0; transform: translateY(22px);
+      transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1);
+      background: var(--bg);
+    }
+    .g-item.revealed { opacity: 1; transform: translateY(0); }
+    .g-item img {
+      width: 100%; height: auto; display: block;
+      transition: filter .45s ease, transform .45s cubic-bezier(.22,.61,.36,1);
+    }
+    .g-item:hover img { filter: brightness(.88); transform: scale(1.025); }
+    .g-item-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 20px;
+      background: linear-gradient(to top, rgba(8,8,8,.55) 0%, transparent 50%);
+      opacity: 0; transition: opacity .3s ease;
+    }
+    .g-item:hover .g-item-overlay { opacity: 1; }
+    .g-item-num {
+      font-size: 9px; font-weight: 600; letter-spacing: 3px;
+      text-transform: uppercase; color: rgba(255,255,255,0.6);
+    }
+    .g-item-label {
+      font-family: 'Anton', sans-serif; font-size: 22px;
+      letter-spacing: .04em; color: #fff; margin-top: 3px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      height: 56px; border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 52px; background: var(--bg);
+    }
+    .footer-left {
+      font-family: 'Anton', sans-serif;
+      font-size: 12px; letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
+    }
+    .footer-links { display: flex; gap: 28px; }
+    .footer-links a {
+      text-decoration: none; color: var(--dim);
+      font-size: 9px; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--black); }
+    .footer-right { font-size: 9px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--dim); }
+
+    /* ── Lightbox ── */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 900;
+      background: rgba(255,255,255,0.96);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s ease;
+      backdrop-filter: blur(16px);
+    }
+    .lightbox.open { opacity: 1; pointer-events: all; }
+    .lightbox img {
+      max-width: 90vw; max-height: 90vh; object-fit: contain;
+      transform: scale(.94); transition: transform .35s cubic-bezier(.22,.61,.36,1);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.15);
+    }
+    .lightbox.open img { transform: scale(1); }
+    .lb-close {
+      position: absolute; top: 24px; right: 24px;
+      background: none; border: 1px solid var(--border-s); color: var(--black);
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 18px; transition: border-color .2s;
+    }
+    .lb-close:hover { border-color: var(--black); }
+    .lb-counter {
+      position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+      font-size: 9px; font-weight: 600; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .lb-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: none; border: 1px solid var(--border); color: var(--black);
+      width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 18px; transition: border-color .2s;
+    }
+    .lb-nav:hover { border-color: var(--black); }
+    .lb-prev { left: 24px; }
+    .lb-next { right: 24px; }
+
+    /* ── Keyframes ── */
+    @keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
+    @keyframes sweepR   { to { clip-path: inset(0 0% 0 0); } }
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      nav, .hero-content, .gallery-header, footer { padding-left: 20px; padding-right: 20px; }
+      .nav-links { display: none; }
+      .hero-count { display: none; }
+      .about { grid-template-columns: 1fr; }
+      .about-left { padding: 48px 20px; border-right: none; border-bottom: 1px solid var(--border); }
+      .about-right { padding: 48px 20px; }
+      .gallery-grid { columns: 2; }
+    }
+    @media (max-width: 480px) {
+      .gallery-grid { columns: 1; }
+      .about-stats { grid-template-columns: repeat(2, 1fr); }
+      .hero-title { font-size: clamp(56px, 14vw, 90px); }
+      .hero-content { padding: 0 20px 56px; }
+      .about-left, .about-right { padding: 40px 20px; }
+      .about-headline { font-size: clamp(44px, 11vw, 64px); }
+      .gallery-header { padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-left">La Familia</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="gallery.html" class="active">Gallery</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="#" class="nav-icon" style="text-decoration:none;font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);transition:color .2s;" onmouseenter="this.style.color='#080808'" onmouseleave="this.style.color='#888'">Sign Up</a>
+    </div>
+  </nav>
+
+  <!-- Hero — replace hero-bg src with your custom 1920×1080px image -->
+  <section class="hero">
+    <img class="hero-bg" id="heroBg"
+      src="https://la-familia-six.vercel.app/assets/gallery/Image%2048.jpg"
+      alt="La Familia">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">La Familia · Cape Town · Gallery</div>
+      <h1 class="hero-title">500+<br>PIECES<br>SOLD.</h1>
+      <p class="hero-sub">Est. 2014 · Authenticated · Protected</p>
+    </div>
+    <div class="hero-count">
+      <span class="hero-count-num">20</span>
+      <span class="hero-count-label">Frames</span>
+    </div>
+    <div class="hero-ticker">
+      <div class="ticker-track">
+        <s>La Familia</s><em>✦</em>
+        <s>Cape Town</s><em>✦</em>
+        <s>Est. 2014</s><em>✦</em>
+        <s>Protect the Family</s><em>✦</em>
+        <s>Authenticated</s><em>✦</em>
+        <s>Limited Release</s><em>✦</em>
+        <s>La Familia</s><em>✦</em>
+        <s>Cape Town</s><em>✦</em>
+        <s>Est. 2014</s><em>✦</em>
+        <s>Protect the Family</s><em>✦</em>
+        <s>Authenticated</s><em>✦</em>
+        <s>Limited Release</s><em>✦</em>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about" id="about">
+    <div class="about-left">
+      <div class="about-super">About La Familia</div>
+      <h2 class="about-headline">CAPE<br>TOWN<br>EST.<br>2014.</h2>
+    </div>
+    <div class="about-right">
+      <p class="about-body">
+        We are La Familia — a collective of sneakerheads, car enthusiasts, and streetwear lovers rooted in Cape Town. Every piece we carry is hand-selected and authenticated. Every drop is exclusive. Every member is family.<br><br>
+        From the rarest Jordan collabs to the finest European luxury pieces, we bring the world's most coveted items to the Cape. No fakes. No compromises. Just the culture.
+      </p>
+      <div class="about-stats">
+        <div><span class="stat-num" data-target="500">0</span><span class="stat-label">Drops Sold</span></div>
+        <div><span class="stat-num" data-target="100">0</span><span class="stat-label">% Auth'd</span></div>
+        <div><span class="stat-num" data-target="2014">0</span><span class="stat-label">Founded</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Header -->
+  <div class="gallery-header">
+    <span class="gallery-label">Gallery · Lifestyle</span>
+    <span class="gallery-count-label">20 Frames · Cape Town · 2026</span>
+  </div>
+
+  <!-- Gallery Grid — 20 images -->
+  <div class="gallery-grid" id="galleryGrid">
+    <div class="g-item" data-index="0"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2029.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">01</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="1"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2030.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">02</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="2"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2031.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">03</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="3"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2032.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">04</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="4"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2033.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">05</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="5"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2034.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">06</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="6"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2035.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">07</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="7"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2036.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">08</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="8"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2037.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">09</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="9"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2038.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">10</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="10"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2039.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">11</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="11"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2040.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">12</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="12"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2041.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">13</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="13"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2042.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">14</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="14"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2043.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">15</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="15"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2044.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">16</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="16"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2045.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">17</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="17"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2046.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">18</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="18"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2047.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">19</span><span class="g-item-label">La Familia</span></div></div>
+    <div class="g-item" data-index="19"><img src="https://la-familia-six.vercel.app/assets/gallery/432ca666-347e-4af3-9e1b-3a943442df01.JPG" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">20</span><span class="g-item-label">La Familia</span></div></div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-left">La Familia</div>
+    <nav class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="#">Contact</a>
+    </nav>
+    <div class="footer-right">Cape Town · 2026</div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <button class="lb-nav lb-prev" onclick="lbNav(-1)">&#8592;</button>
+    <img id="lbImg" src="" alt="">
+    <button class="lb-nav lb-next" onclick="lbNav(1)">&#8594;</button>
+    <button class="lb-close" onclick="closeLightbox()">&#215;</button>
+    <span class="lb-counter" id="lbCounter">1 / 20</span>
+  </div>
+
+  <script>
+    /* Gallery stills are still served from the previous la-familia-six
+       deployment. Move them into Cloudinary before that project is removed. */
+    const GALLERY_BASE = 'https://la-familia-six.vercel.app/assets/gallery/';
+    const IMGS = [
+      'Image%2029.jpg','Image%2030.jpg','Image%2031.jpg','Image%2032.jpg',
+      'Image%2033.jpg','Image%2034.jpg','Image%2035.jpg','Image%2036.jpg',
+      'Image%2037.jpg','Image%2038.jpg','Image%2039.jpg','Image%2040.jpg',
+      'Image%2041.jpg','Image%2042.jpg','Image%2043.jpg','Image%2044.jpg',
+      'Image%2045.jpg','Image%2046.jpg','Image%2047.jpg',
+      '432ca666-347e-4af3-9e1b-3a943442df01.JPG',
+    ].map(name => GALLERY_BASE + name);
+    let lbIndex = 0;
+
+    document.querySelectorAll('.g-item').forEach(item => {
+      item.addEventListener('click', () => openLightbox(parseInt(item.dataset.index)));
+    });
+
+    function openLightbox(i) {
+      lbIndex = i;
+      document.getElementById('lbImg').src = IMGS[i];
+      document.getElementById('lbCounter').textContent = (i + 1) + ' / ' + IMGS.length;
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox(e) {
+      if (e && e.target !== document.getElementById('lightbox') && !e.currentTarget.classList.contains('lb-close')) return;
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function lbNav(dir) {
+      lbIndex = (lbIndex + dir + IMGS.length) % IMGS.length;
+      document.getElementById('lbImg').src = IMGS[lbIndex];
+      document.getElementById('lbCounter').textContent = (lbIndex + 1) + ' / ' + IMGS.length;
+    }
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'ArrowRight') lbNav(1);
+      if (e.key === 'ArrowLeft')  lbNav(-1);
+      if (e.key === 'Escape') { document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow = ''; }
+    });
+
+    /* Scroll-reveal gallery items */
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        const delay = (parseInt(el.dataset.index) % 3) * 80;
+        setTimeout(() => el.classList.add('revealed'), delay);
+        revealObs.unobserve(el);
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.g-item').forEach(el => revealObs.observe(el));
+
+    /* Counter animation */
+    function animateCount(el, target, duration) {
+      const start = performance.now();
+      (function tick(now) {
+        const t = Math.min((now - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(target * ease);
+        if (t < 1) requestAnimationFrame(tick);
+        else el.textContent = target;
+      })(start);
+    }
+    new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) return;
+      document.querySelectorAll('[data-target]').forEach(el => animateCount(el, parseInt(el.dataset.target), 1600));
+    }, { threshold: 0.5 }).observe(document.getElementById('about'));
+
+  </script>
+</body>
+</html>

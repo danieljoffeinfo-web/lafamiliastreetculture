@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Familia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://res.cloudinary.com">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --white: #ffffff;
+      --black: #080808;
+      --red:   #c8372d;
+      --muted: #aaaaaa;
+    }
+
+    html, body {
+      width: 100%;
+      background: var(--white);
+      color: var(--black);
+      font-family: 'Inter', sans-serif;
+      overflow-x: clip; /* clip instead of hidden — hidden breaks position:sticky */
+      cursor: none;
+      overscroll-behavior: none;
+    }
+
+    /* ─── Custom Cursor ─── */
+    #cur-dot {
+      position: fixed; z-index: 9999; pointer-events: none;
+      width: 7px; height: 7px;
+      background: var(--black);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width .2s, height .2s, background .2s, opacity .2s;
+    }
+    #cur-ring {
+      position: fixed; z-index: 9998; pointer-events: none;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(0,0,0,.28);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width .3s, height .3s, border-color .3s;
+    }
+    body.shoe-mode #cur-dot  { background: var(--red); width: 9px; height: 9px; }
+    body.shoe-mode #cur-ring { width: 56px; height: 56px; border-color: rgba(200,55,45,.5); }
+
+    /* ─── Nav ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 52px;
+      opacity: 0;
+      animation: fadeIn .6s ease .1s forwards;
+    }
+    .nav-l { display: flex; align-items: center; gap: 13px; }
+    .nav-logo {
+      height: 56px; flex-shrink: 0;
+    }
+    .nav-logo img { height: 100%; width: auto; display: block; object-fit: contain; }
+    .nav-brand { display: none; }
+    .nav-links { list-style: none; display: flex; gap: 38px; }
+    .nav-links a {
+      text-decoration: none; font-size: 10px; font-weight: 600;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--muted); transition: color .25s; cursor: none;
+    }
+    .nav-links a:hover { color: var(--black); }
+
+    /* ─── Hero ─── */
+    .hero {
+      position: relative; width: 100vw; height: 100vh; overflow: hidden;
+    }
+
+    /* Full brand name — single line, fully visible below shoe */
+    .t-main {
+      position: absolute; bottom: 20vh; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(48px, 7.2vw, 104px);
+      letter-spacing: .28em; line-height: 1; white-space: nowrap;
+      color: var(--black);
+      z-index: 40;
+      clip-path: inset(0 101% 0 0);
+      animation: sweepR 1s cubic-bezier(.76,0,.24,1) .7s forwards;
+    }
+
+    .la-line { display: none; }
+
+    /* ─── Shoe ─── */
+    .shoe-parallax {
+      position: absolute; top: 44%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(340px, 52vw, 680px);
+      z-index: 20;
+    }
+
+    .shoe-wrap {
+      position: relative; width: 100%;
+      opacity: 0;
+      animation: shoeEnter 1s cubic-bezier(.34,1.45,.64,1) 1.05s forwards;
+    }
+
+    .shoe-base {
+      display: block; width: 100%; height: auto;
+      mix-blend-mode: multiply;
+      animation: shoeFloat 5.5s ease-in-out infinite 2.1s;
+      -webkit-user-drag: none; user-select: none;
+    }
+
+    .shoe-red {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: auto; display: block;
+      clip-path: circle(0% at 50% 50%);
+      -webkit-user-drag: none; user-select: none;
+      pointer-events: none;
+    }
+
+    .shoe-shadow {
+      position: absolute; bottom: -3%; left: 50%;
+      transform: translateX(-50%);
+      width: 48%; height: 18px;
+      background: radial-gradient(ellipse, rgba(0,0,0,.11) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: shadowBreathe 5.5s ease-in-out infinite 2.1s;
+    }
+
+    .shoe-counter { display: none; }
+
+    /* ─── Side labels ─── */
+    .side-l, .side-r {
+      position: absolute; top: 50%;
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 3.5px; text-transform: uppercase;
+      color: var(--muted); z-index: 40;
+      opacity: 0; animation: fadeIn .6s ease 1.9s forwards;
+    }
+    .side-l { left: 48px; transform: translateY(-50%) rotate(-90deg); transform-origin: center; }
+    .side-r { right: 48px; transform: translateY(-50%) rotate(90deg); transform-origin: center; }
+
+    /* ─── CTA ─── */
+    .cta-row {
+      position: absolute; bottom: 54px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; align-items: center; gap: 14px;
+      z-index: 40; white-space: nowrap;
+      opacity: 0; animation: fadeUp .6s ease 1.7s forwards;
+    }
+    .btn {
+      padding: 13px 34px;
+      font-size: 9px; font-weight: 700; letter-spacing: 3.5px;
+      text-transform: uppercase; border: none; cursor: none;
+      transition: transform .18s ease, background .2s, color .2s, border-color .2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-fill  { background: var(--black); color: var(--white); }
+    .btn-fill:hover  { background: var(--red); }
+    .btn-ghost { background: transparent; color: var(--black); border: 1.5px solid rgba(8,8,8,.16); }
+    .btn-ghost:hover { border-color: var(--black); }
+
+    /* ─── Hero Ticker ─── */
+    .ticker {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 34px; background: var(--black); overflow: hidden;
+      display: flex; align-items: center; z-index: 50;
+      opacity: 0; animation: fadeIn .5s ease 2.1s forwards;
+    }
+    .ticker-track {
+      display: flex; white-space: nowrap;
+      animation: tickerScroll 24s linear infinite;
+    }
+    .ticker-track s {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: #fff;
+      padding: 0 24px; text-decoration: none;
+    }
+    .ticker-track em { color: var(--red); font-style: normal; padding: 0 6px; font-size: 12px; }
+
+    /* ─── Car Section ─── */
+    .car-section {
+      height: 500vh; /* ~100vh per second of 5s video */
+      background: var(--white);
+      border-top: 1px solid rgba(0,0,0,.06);
+    }
+
+    .car-sticky {
+      position: sticky; top: 0; height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      overflow: hidden;
+      background: var(--white);
+    }
+
+    #carVideo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0;
+      transition: opacity .6s ease;
+    }
+
+    #carCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      opacity: 0;
+      transition: opacity .6s ease;
+    }
+
+    /* Car section eyebrow */
+    .car-eyebrow {
+      position: absolute; top: 32px; left: 52px;
+      font-size: 9px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--muted);
+      opacity: 0; transition: opacity .5s;
+    }
+
+    /* View Rentals button — appears bottom-right at end of animation */
+    .btn-rentals {
+      position: absolute; bottom: 140px; right: 52px; z-index: 10;
+      padding: 14px 32px;
+      font-size: 9px; font-weight: 700; letter-spacing: 3.5px;
+      text-transform: uppercase; border: none; cursor: none;
+      background: var(--white); color: var(--black);
+      opacity: 0; transition: opacity .8s ease, transform .3s ease, background .2s;
+    }
+    .btn-rentals:hover { background: var(--red); color: var(--white); transform: translateY(-2px); }
+
+    /* Info bar at bottom */
+    .car-info {
+      position: absolute; bottom: 52px; z-index: 10;
+      left: 0; right: 0;
+      display: flex; justify-content: space-between;
+      padding: 0 52px;
+      opacity: 0; transition: opacity .8s ease;
+    }
+    .car-info span {
+      font-size: 9px; font-weight: 600; letter-spacing: 3px;
+      text-transform: uppercase; color: rgba(255,255,255,.7);
+      text-shadow: 0 1px 8px rgba(0,0,0,.4);
+    }
+    .car-info span b { color: #fff; font-weight: 700; }
+
+    .car-eyebrow { display: none !important; }
+
+    /* Car section ticker */
+    .car-ticker {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
+      height: 34px; background: var(--black); overflow: hidden;
+      display: flex; align-items: center;
+      opacity: 0; transition: opacity .5s;
+    }
+    .car-ticker .ticker-track { animation: tickerScroll 30s linear infinite; }
+
+    /* ─── Keyframes ─── */
+    @keyframes fadeIn  { to { opacity: 1; } }
+    @keyframes fadeUp  {
+      from { opacity: 0; transform: translate(-50%, 14px); }
+      to   { opacity: 1; transform: translate(-50%, 0); }
+    }
+    @keyframes sweepR  { to { clip-path: inset(0 0% 0 0); } }
+    @keyframes sweepL  { to { clip-path: inset(0 0 0 0%); } }
+    @keyframes lineGrow { from { width: 0; } to { width: clamp(60px, 10vw, 130px); } }
+    @keyframes scaleIn  { to { transform: scaleX(1); } }
+    @keyframes shoeEnter {
+      from { opacity: 0; transform: translateY(28px) scale(.93); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes shoeFloat {
+      0%,100% { transform: translateY(0px) rotate(-1.2deg); }
+      50%      { transform: translateY(-20px) rotate(1.2deg); }
+    }
+    @keyframes shadowBreathe {
+      0%,100% { transform: translateX(-50%) scale(1); opacity: .9; }
+      50%      { transform: translateX(-50%) scale(.78); opacity: .35; }
+    }
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── Touch devices — hide custom cursor ─── */
+    @media (hover: none), (pointer: coarse) {
+      html, body { cursor: auto; }
+      #cur-dot, #cur-ring { display: none; }
+      .btn, .btn-rentals, .nav-links a { cursor: pointer !important; }
+    }
+
+    /* ─── Tablet ─── */
+    @media (max-width: 768px) {
+      #carVideo  { display: none !important; }
+      #carCanvas { display: block; }
+      .car-section, .car-sticky { background: #000; }
+      nav { padding: 18px 20px; }
+      .nav-links { gap: 20px; }
+      .nav-links a { font-size: 9px; letter-spacing: 1.5px; }
+
+      .t-main { font-size: clamp(40px, 9vw, 80px); letter-spacing: .18em; }
+
+      .shoe-parallax { width: min(82vw, 400px); }
+
+      .side-l, .side-r { display: none; }
+
+      .cta-row { gap: 10px; }
+      .btn { padding: 12px 24px; font-size: 8px; letter-spacing: 2.5px; }
+
+      .btn-rentals { right: 20px; bottom: 80px; }
+      .car-info { padding: 0 20px; }
+      .car-info span { font-size: 8px; }
+    }
+
+    /* ─── Phone ─── */
+    @media (max-width: 480px) {
+      nav { padding: 14px 16px; }
+      .nav-links { gap: 12px; }
+      .nav-logo { height: 40px; }
+      /* Three short links now — all three fit, nothing hidden. */
+
+      .t-main { font-size: clamp(30px, 10.5vw, 48px); letter-spacing: .12em; }
+
+      .shoe-parallax { width: min(90vw, 320px); top: 42%; }
+
+      .cta-row {
+        flex-direction: column; align-items: center;
+        bottom: 48px; gap: 8px;
+      }
+      .btn { padding: 13px 36px; }
+
+      .ticker-track s { font-size: 8px; letter-spacing: 3px; padding: 0 16px; }
+
+      .car-info { display: none; }
+      .btn-rentals { right: 16px; bottom: 60px; padding: 12px 22px; }
+      .car-info, .car-eyebrow { left: 16px !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div id="cur-dot"></div>
+  <div id="cur-ring"></div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-logo">
+      <img src="https://res.cloudinary.com/dmanxetyl/image/upload/f_auto,q_auto,h_120/v1786551000/lafamilia/logo-full.png" alt="La Familia">
+    </div>
+    <ul class="nav-links">
+      <li><a href="#">Sign Up</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="t-main">LA FAMILIA</div>
+    <div class="la-line"></div>
+
+    <div class="shoe-parallax" id="shoeParallax">
+      <div class="shoe-wrap" id="shoeWrap">
+        <!-- Original pair, recovered from the la-familia-six build. Both are
+             800x570, so the two layers line up exactly as before. -->
+        <img class="shoe-base"
+             src="https://res.cloudinary.com/dmanxetyl/image/upload/f_auto,q_auto/v1786551146/lafamilia/shoe-grey.jpg"
+             alt="KAWS Jordan 4 Cool Grey">
+        <img class="shoe-red" id="shoeRed"
+             src="https://res.cloudinary.com/dmanxetyl/image/upload/f_auto,q_auto/v1786551147/lafamilia/shoe-red.jpg"
+             alt="Jordan 4 Red">
+        <div class="shoe-shadow"></div>
+      </div>
+    </div>
+
+    <span class="side-l">Est. 2014 · Cape Town</span>
+    <span class="side-r">Jordan IV · KAWS</span>
+
+    <div class="cta-row">
+      <button class="btn btn-fill">Explore the Drop</button>
+      <button class="btn btn-ghost">Our Story</button>
+    </div>
+
+    <div class="ticker">
+      <div class="ticker-track">
+        <s>La Familia</s><em>✦</em><s>Louis Vuitton</s><em>✦</em>
+        <s>Chrome Hearts</s><em>✦</em><s>Jordans</s><em>✦</em>
+        <s>Cape Town</s><em>✦</em><s>Moncler</s><em>✦</em>
+        <s>Protect the Family</s><em>✦</em><s>Limited Release</s><em>✦</em>
+        <s>La Familia</s><em>✦</em><s>Louis Vuitton</s><em>✦</em>
+        <s>Chrome Hearts</s><em>✦</em><s>Jordans</s><em>✦</em>
+        <s>Cape Town</s><em>✦</em><s>Moncler</s><em>✦</em>
+        <s>Protect the Family</s><em>✦</em><s>Limited Release</s><em>✦</em>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Car Section ── -->
+  <section class="car-section" id="carSection">
+    <div class="car-sticky">
+
+      <div class="car-eyebrow" id="carEyebrow">The Ride &nbsp;·&nbsp; La Familia Series</div>
+
+      <video id="carVideo"
+        src="https://res.cloudinary.com/dmanxetyl/video/upload/f_mp4,vc_h264,w_1920,q_auto/v1786551001/lafamilia/car.mp4"
+        muted playsinline webkit-playsinline preload="auto"
+        crossorigin="anonymous"
+        disablepictureinpicture>
+      </video>
+
+      <!-- Mobile scroll frames (canvas) -->
+      <canvas id="carCanvas"></canvas>
+
+      <button class="btn-rentals" id="btnRentals">View Rentals</button>
+
+      <div class="car-info" id="carInfo">
+        <span>Porsche <b>911 Turbo S</b></span>
+        <span><b>La Familia</b> Edition</span>
+        <span>Cape Town &nbsp;·&nbsp; <b>2026</b></span>
+      </div>
+
+      <div class="car-ticker" id="carTicker">
+        <div class="ticker-track">
+          <s>The Ride</s><em>✦</em><s>911 Turbo S</s><em>✦</em>
+          <s>La Familia Edition</s><em>✦</em><s>Cape Town</s><em>✦</em>
+          <s>White on White</s><em>✦</em><s>Protect the Family</s><em>✦</em>
+          <s>The Ride</s><em>✦</em><s>911 Turbo S</s><em>✦</em>
+          <s>La Familia Edition</s><em>✦</em><s>Cape Town</s><em>✦</em>
+          <s>White on White</s><em>✦</em><s>Protect the Family</s><em>✦</em>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    /* ════════════════════════════════
+       HERO — Cursor + Shoe
+    ════════════════════════════════ */
+    const dot  = document.getElementById('cur-dot');
+    const ring = document.getElementById('cur-ring');
+    let rx = -100, ry = -100, mx = -100, my = -100;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px';
+      dot.style.top  = my + 'px';
+    });
+    (function curRaf() {
+      rx += (mx - rx) * .18;
+      ry += (my - ry) * .18;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(curRaf);
+    })();
+
+    /* Shoe parallax — disabled on touch devices */
+    const parallax = document.getElementById('shoeParallax');
+    const isTouch  = window.matchMedia('(hover: none)').matches;
+    let px = 0, py = 0, pcx = 0, pcy = 0;
+    if (!isTouch) {
+      document.addEventListener('mousemove', e => {
+        px = (e.clientX / innerWidth  - .5) * 26;
+        py = (e.clientY / innerHeight - .5) * 16;
+      });
+    }
+    (function parRaf() {
+      if (!isTouch) {
+        pcx += (px - pcx) * .09;
+        pcy += (py - pcy) * .09;
+        parallax.style.transform = `translate(calc(-50% + ${pcx}px), calc(-50% + ${pcy}px))`;
+      }
+      requestAnimationFrame(parRaf);
+    })();
+
+    /* Spotlight reveal */
+    const wrap    = document.getElementById('shoeWrap');
+    const redShoe = document.getElementById('shoeRed');
+    let revX = 50, revY = 50, sX = 50, sY = 50;
+    let revR = 0, targetR = 0, breathPhase = 0, isOver = false;
+
+    /* Mouse */
+    wrap.addEventListener('mouseenter', () => { isOver = true;  targetR = 13; document.body.classList.add('shoe-mode'); });
+    wrap.addEventListener('mouseleave', () => { isOver = false; targetR = 0;  document.body.classList.remove('shoe-mode'); });
+    wrap.addEventListener('mousemove', e => {
+      const r = wrap.getBoundingClientRect();
+      revX = ((e.clientX - r.left) / r.width)  * 100;
+      revY = ((e.clientY - r.top)  / r.height) * 100;
+    });
+
+    /* Touch — same reveal effect on finger press */
+    wrap.addEventListener('touchstart', e => {
+      isOver = true; targetR = 13;
+      document.body.classList.add('shoe-mode');
+      const r = wrap.getBoundingClientRect();
+      const t = e.touches[0];
+      revX = ((t.clientX - r.left) / r.width)  * 100;
+      revY = ((t.clientY - r.top)  / r.height) * 100;
+    }, { passive: true });
+    wrap.addEventListener('touchmove', e => {
+      const r = wrap.getBoundingClientRect();
+      const t = e.touches[0];
+      revX = ((t.clientX - r.left) / r.width)  * 100;
+      revY = ((t.clientY - r.top)  / r.height) * 100;
+    }, { passive: true });
+    wrap.addEventListener('touchend', () => {
+      isOver = false; targetR = 0;
+      document.body.classList.remove('shoe-mode');
+    }, { passive: true });
+    (function revRaf() {
+      sX   += (revX - sX)   * .16;
+      sY   += (revY - sY)   * .16;
+      revR += (targetR - revR) * .14;
+      if (isOver) breathPhase += .025;
+      const breath = isOver ? Math.sin(breathPhase) * 1.8 : 0;
+      redShoe.style.clipPath = `circle(${Math.max(0, revR + breath)}% at ${sX}% ${sY}%)`;
+      requestAnimationFrame(revRaf);
+    })();
+
+    /* ════════════════════════════════
+       CAR SECTION — Video scrubber
+    ════════════════════════════════ */
+    const carSection = document.getElementById('carSection');
+    const carVideo   = document.getElementById('carVideo');
+    const carInfo    = document.getElementById('carInfo');
+    const btnRentals = document.getElementById('btnRentals');
+    const carEyebrow = document.getElementById('carEyebrow');
+    const carTicker  = document.getElementById('carTicker');
+
+    if (isTouch) {
+      /* ── Mobile: canvas frame-sequence scroll scrub ── */
+      const canvas = document.getElementById('carCanvas');
+      const ctx    = canvas.getContext('2d');
+      const FRAMES = 66;
+
+      /* Frames are pulled straight off the Cloudinary video as stills
+         (so_<n>p = start offset as a percentage of duration), so there is no
+         separate frame folder to keep in sync with the video. */
+      const frameUrl = i => {
+        const pct = Math.min(99, Math.round((i / (FRAMES - 1)) * 100));
+        return `https://res.cloudinary.com/dmanxetyl/video/upload/so_${pct}p,w_1080,q_auto/v1786551001/lafamilia/car.jpg`;
+      };
+
+      /* DPR-aware resize so canvas buffer matches physical pixels */
+      function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const w   = canvas.offsetWidth  || window.innerWidth;
+        const h   = canvas.offsetHeight || window.innerHeight;
+        canvas.width  = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas, { passive: true });
+
+      /* Preload all frames eagerly */
+      const imgs = Array.from({ length: FRAMES }, (_, i) => {
+        const img = new Image();
+        img.src = frameUrl(i);
+        return img;
+      });
+
+      function drawFrame(idx) {
+        /* Find nearest already-loaded frame if target isn't ready */
+        let i = Math.max(0, Math.min(idx, FRAMES - 1));
+        if (!imgs[i].complete || !imgs[i].naturalWidth) {
+          for (let d = 1; d < FRAMES; d++) {
+            const lo = i - d, hi = i + d;
+            if (lo >= 0 && imgs[lo].complete && imgs[lo].naturalWidth) { i = lo; break; }
+            if (hi < FRAMES && imgs[hi].complete && imgs[hi].naturalWidth) { i = hi; break; }
+          }
+        }
+        const img = imgs[i];
+        if (!img.complete || !img.naturalWidth) return;
+        const cw = canvas.width, ch = canvas.height;
+        const scale = cw / img.naturalWidth;
+        const sw = cw;
+        const sh = img.naturalHeight * scale;
+        const dy = (ch - sh) / 2;
+        ctx.clearRect(0, 0, cw, ch);
+        /* Blurred background — always matches the frame's own colours */
+        ctx.save();
+        ctx.filter = 'blur(40px)';
+        ctx.drawImage(img, -40, dy - 40, sw + 80, sh + 80);
+        ctx.restore();
+        /* Sharp image centred on top */
+        ctx.drawImage(img, 0, dy, sw, sh);
+      }
+
+      let lastIdx = -1;
+
+      function scrubFrames() {
+        const rect  = carSection.getBoundingClientRect();
+        const total = carSection.offsetHeight - window.innerHeight;
+        const rawP  = Math.max(0, Math.min(1, -rect.top / total));
+
+        const visible = rawP > 0.005;
+        canvas.style.opacity     = visible ? '1' : '0';
+        carEyebrow.style.opacity = visible ? '1' : '0';
+
+        if (visible) {
+          const idx = Math.min(Math.floor(rawP * FRAMES), FRAMES - 1);
+          if (idx !== lastIdx) { drawFrame(idx); lastIdx = idx; }
+        }
+
+        const atEnd = rawP > 0.85;
+        carInfo.style.opacity    = atEnd ? '1' : '0';
+        carTicker.style.opacity  = atEnd ? '1' : '0';
+        btnRentals.style.opacity = atEnd ? '1' : '0';
+
+        mobileRafId = requestAnimationFrame(scrubFrames);
+      }
+
+      let mobileRafId = null;
+      new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          if (!mobileRafId) mobileRafId = requestAnimationFrame(scrubFrames);
+        } else {
+          if (mobileRafId) { cancelAnimationFrame(mobileRafId); mobileRafId = null; }
+        }
+      }, { threshold: 0.01 }).observe(carSection);
+
+    } else {
+      /* ── Desktop: scroll-scrub ── */
+      let videoReady = false;
+      let rawP = 0, smoothP = 0, lastSeek = -1;
+
+      carVideo.addEventListener('canplay', () => { videoReady = true; });
+
+      function getCarProgress() {
+        const rect  = carSection.getBoundingClientRect();
+        const total = carSection.offsetHeight - window.innerHeight;
+        return Math.max(0, Math.min(1, -rect.top / total));
+      }
+
+      function scrubCar() {
+        rawP = getCarProgress();
+        const delta = rawP - smoothP;
+        smoothP += delta * (delta < 0 ? 0.06 : 0.10);
+
+        if (videoReady && carVideo.duration) {
+          const t = smoothP * carVideo.duration;
+          if (Math.abs(t - lastSeek) > 0.008) { carVideo.currentTime = t; lastSeek = t; }
+        }
+
+        const visible = rawP > 0.005;
+        carVideo.style.opacity   = visible ? '1' : '0';
+        carEyebrow.style.opacity = visible ? '1' : '0';
+
+        const atEnd = smoothP > 0.85;
+        carInfo.style.opacity    = atEnd ? '1' : '0';
+        carTicker.style.opacity  = atEnd ? '1' : '0';
+        btnRentals.style.opacity = atEnd ? '1' : '0';
+
+        requestAnimationFrame(scrubCar);
+      }
+
+      let carRafId = null;
+      new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          if (!carRafId) carRafId = requestAnimationFrame(scrubCar);
+        } else {
+          if (carRafId) { cancelAnimationFrame(carRafId); carRafId = null; }
+        }
+      }, { threshold: 0.01 }).observe(carSection);
+    }
+  </script>
+</body>
+</html>
