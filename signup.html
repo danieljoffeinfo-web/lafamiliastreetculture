@@ -131,9 +131,8 @@
         <div class="eyebrow">La Familia · Cape Town · Est. 2014</div>
         <h1>Sign Up</h1>
         <p class="lede">
-          Pre-register for early access to every drop. Because of the volume of fraud in
-          the resale market, every member is verified before their first order — so we
-          need your ID or passport number up front.
+          Pre-register for early access to every drop. Give us your details and we'll
+          reach out before the next release goes live.
         </p>
       </div>
 
@@ -143,7 +142,7 @@
         <div class="field">
           <label for="full_name">Full Name</label>
           <input id="full_name" name="full_name" type="text" autocomplete="name"
-                 required minlength="2" maxlength="120" placeholder="As it appears on your ID">
+                 required minlength="2" maxlength="120" placeholder="Your full name">
         </div>
 
         <div class="field">
@@ -153,14 +152,11 @@
         </div>
 
         <div class="field">
-          <label for="id_document">ID / Passport Number</label>
-          <input id="id_document" name="id_document" type="text" inputmode="text"
-                 autocomplete="off" required minlength="4" maxlength="40"
-                 placeholder="SA ID or passport number">
-          <span class="hint">
-            Used for verification only, to protect the family against fraudulent orders.
-            Stored securely and never shown publicly.
-          </span>
+          <label for="cellphone">Cellphone Number</label>
+          <input id="cellphone" name="cellphone" type="tel" inputmode="tel"
+                 autocomplete="tel" required minlength="8" maxlength="20"
+                 placeholder="082 123 4567">
+          <span class="hint">So we can reach you about your order and delivery.</span>
         </div>
 
         <div class="field">
@@ -193,7 +189,7 @@
   <script>
     /* Publishable (anon) key — safe in the browser. The pre_registrations table
        is insert-only for this role: it can accept a sign-up but cannot read any
-       row back, so nobody's ID number or address is exposed here. */
+       row back, so nobody's number or address is exposed here. */
     const SUPABASE_URL = 'https://kxszksufcmgucakgwodx.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_0UQsuVelqfe9Aqf8YmyRbQ_q8dG5Rrh';
 
@@ -213,18 +209,18 @@
       const payload = {
         full_name:        form.full_name.value.trim(),
         email:            form.email.value.trim(),
-        id_document:      form.id_document.value.trim(),
+        cellphone:        form.cellphone.value.trim(),
         delivery_address: form.delivery_address.value.trim(),
       };
 
       if (!payload.full_name || payload.full_name.length < 2) {
-        return showMsg('Please enter your full name as it appears on your ID.', true);
+        return showMsg('Please enter your full name.', true);
       }
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(payload.email)) {
         return showMsg('Please enter a valid email address.', true);
       }
-      if (payload.id_document.length < 4) {
-        return showMsg('Please enter your ID or passport number.', true);
+      if (!/^[0-9+()\s-]{8,20}$/.test(payload.cellphone)) {
+        return showMsg('Please enter a valid cellphone number.', true);
       }
       if (payload.delivery_address.length < 8) {
         return showMsg('Please enter a delivery address we can ship to.', true);

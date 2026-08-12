@@ -148,42 +148,6 @@
     }
     .ticker-track em { color: var(--red); font-style: normal; padding: 0 6px; }
 
-    /* ── About ── */
-    .about {
-      display: grid; grid-template-columns: 1fr 1fr;
-      border-bottom: 1px solid var(--border);
-    }
-    .about-left {
-      padding: 80px 52px; border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; justify-content: center;
-    }
-    .about-super {
-      font-size: 9px; font-weight: 700; letter-spacing: 4px;
-      text-transform: uppercase; color: var(--red); margin-bottom: 24px;
-    }
-    .about-headline {
-      font-family: 'Anton', sans-serif;
-      font-size: clamp(52px, 5.5vw, 84px);
-      letter-spacing: .04em; line-height: .92; color: var(--black);
-    }
-    .about-right {
-      padding: 80px 52px;
-      display: flex; flex-direction: column; justify-content: space-between;
-    }
-    .about-body {
-      font-size: 15px; font-weight: 300; color: var(--muted);
-      line-height: 1.75; max-width: 400px; margin-bottom: 48px;
-    }
-    .about-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-    .stat-num {
-      font-family: 'Anton', sans-serif; font-size: 36px;
-      letter-spacing: .04em; color: var(--black); line-height: 1; display: block;
-    }
-    .stat-label {
-      font-size: 8px; font-weight: 600; letter-spacing: 2.5px;
-      text-transform: uppercase; color: var(--muted); margin-top: 6px; display: block;
-    }
-
     /* ── Gallery Header ── */
     .gallery-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -308,18 +272,12 @@
       nav, .hero-content, .gallery-header, footer { padding-left: 20px; padding-right: 20px; }
       .nav-links { display: none; }
       .hero-count { display: none; }
-      .about { grid-template-columns: 1fr; }
-      .about-left { padding: 48px 20px; border-right: none; border-bottom: 1px solid var(--border); }
-      .about-right { padding: 48px 20px; }
       .gallery-grid { columns: 2; }
     }
     @media (max-width: 480px) {
       .gallery-grid { columns: 1; }
-      .about-stats { grid-template-columns: repeat(2, 1fr); }
       .hero-title { font-size: clamp(56px, 14vw, 90px); }
       .hero-content { padding: 0 20px 56px; }
-      .about-left, .about-right { padding: 40px 20px; }
-      .about-headline { font-size: clamp(44px, 11vw, 64px); }
       .gallery-header { padding: 16px 20px; }
     }
   </style>
@@ -347,25 +305,6 @@
     <div class="hero-count">
       <span class="hero-count-num" id="heroCount">19</span>
       <span class="hero-count-label">Frames</span>
-    </div>
-  </section>
-
-  <!-- About -->
-  <section class="about" id="about">
-    <div class="about-left">
-      <div class="about-super">About La Familia</div>
-      <h2 class="about-headline">CAPE<br>TOWN<br>EST.<br>2014.</h2>
-    </div>
-    <div class="about-right">
-      <p class="about-body">
-        We are La Familia — a collective of sneakerheads, car enthusiasts, and streetwear lovers rooted in Cape Town. Every piece we carry is hand-selected and authenticated. Every drop is exclusive. Every member is family.<br><br>
-        From the rarest Jordan collabs to the finest European luxury pieces, we bring the world's most coveted items to the Cape. No fakes. No compromises. Just the culture.
-      </p>
-      <div class="about-stats">
-        <div><span class="stat-num" data-target="500">0</span><span class="stat-label">Drops Sold</span></div>
-        <div><span class="stat-num" data-target="100">0</span><span class="stat-label">% Auth'd</span></div>
-        <div><span class="stat-num" data-target="2014">0</span><span class="stat-label">Founded</span></div>
-      </div>
     </div>
   </section>
 
@@ -481,22 +420,6 @@
       });
     }, { threshold: 0.08 });
     document.querySelectorAll('.g-item').forEach(el => revealObs.observe(el));
-
-    /* Counter animation */
-    function animateCount(el, target, duration) {
-      const start = performance.now();
-      (function tick(now) {
-        const t = Math.min((now - start) / duration, 1);
-        const ease = 1 - Math.pow(1 - t, 3);
-        el.textContent = Math.round(target * ease);
-        if (t < 1) requestAnimationFrame(tick);
-        else el.textContent = target;
-      })(start);
-    }
-    new IntersectionObserver(entries => {
-      if (!entries[0].isIntersecting) return;
-      document.querySelectorAll('[data-target]').forEach(el => animateCount(el, parseInt(el.dataset.target), 1600));
-    }, { threshold: 0.5 }).observe(document.getElementById('about'));
 
   </script>
 </body>
