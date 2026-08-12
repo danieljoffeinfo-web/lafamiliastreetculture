@@ -151,7 +151,8 @@ a {
 
   position: relative;
   width: min(92vw, 940px);
-  height: min(60svh, 640px);
+  /* Sized to the 1400x600 hero canvas so there is no dead band above the shoe. */
+  height: min(52svh, 440px);
   margin-inline: auto;
   touch-action: pan-y;
 }
@@ -385,7 +386,7 @@ a {
   }
   .stage {
     width: 100%;
-    height: min(46svh, 420px);
+    height: min(30svh, 200px);
   }
   .wordmark {
     font-size: clamp(2.2rem, 13vw, 4rem);

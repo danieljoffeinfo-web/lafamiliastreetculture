@@ -1,10 +1,12 @@
 const CLD = 'https://res.cloudinary.com/dmanxetyl/image/upload'
 /**
- * `e_trim` strips the white studio margin so the shoe fills the hero instead of
- * floating inside its portrait frame. Raise the tolerance if a photo has a soft
- * background; drop the whole segment to use the untouched original.
+ * Both shoe photos are portrait with a deep white studio margin, and they crop to
+ * different shapes (2.33:1 and 1.80:1). So: `e_trim` strips the margin, then
+ * `c_pad` normalises both onto one 1400x600 white canvas. Identical canvases mean
+ * the two layers map to the exact same rectangle, so the lens reveals a shoe that
+ * sits in the same place instead of jumping size.
  */
-const TX = 'e_trim:12/f_auto,q_auto,w_1400,c_limit'
+const TX = 'e_trim:12/c_pad,w_1400,h_600,b_white/f_auto,q_auto'
 
 export const SITE = {
   name: 'La Familia',
