@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — La Familia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://res.cloudinary.com">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --white: #ffffff;
+      --black: #080808;
+      --red:   #c8372d;
+      --muted: #888888;
+      --dim:   #cccccc;
+      --border: rgba(0,0,0,0.14);
+    }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: 'Inter', sans-serif;
+      min-height: 100svh;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Nav ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 52px;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+    .nav-logo { height: 46px; }
+    .nav-logo img { height: 100%; width: auto; display: block; object-fit: contain; }
+    .nav-back {
+      text-decoration: none;
+      font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--muted); transition: color .2s;
+    }
+    .nav-back:hover { color: var(--black); }
+
+    /* ── Layout ── */
+    main {
+      flex: 1;
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 56px 24px 72px;
+    }
+    .card { width: 100%; max-width: 520px; }
+
+    .eyebrow {
+      font-size: 9px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+    }
+    h1 {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(44px, 8vw, 72px);
+      letter-spacing: .04em; line-height: .95; text-transform: uppercase;
+    }
+    .lede {
+      margin-top: 18px;
+      font-size: 14px; font-weight: 300; line-height: 1.75; color: var(--muted);
+    }
+
+    /* ── Form ── */
+    form { margin-top: 36px; display: flex; flex-direction: column; gap: 22px; }
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    label {
+      font-size: 9px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--black);
+    }
+    .hint { font-size: 12px; font-weight: 300; color: var(--muted); line-height: 1.6; }
+    input, textarea {
+      font-family: inherit; font-size: 15px; color: var(--black);
+      background: var(--white);
+      border: 1px solid var(--border); border-radius: 0;
+      padding: 14px 16px; width: 100%;
+      transition: border-color .2s;
+    }
+    input:focus, textarea:focus { outline: none; border-color: var(--black); }
+    textarea { resize: vertical; min-height: 96px; }
+
+    button[type="submit"] {
+      font-family: inherit;
+      padding: 16px 34px;
+      font-size: 10px; font-weight: 700; letter-spacing: 3.5px;
+      text-transform: uppercase; border: none; cursor: pointer;
+      background: var(--black); color: var(--white);
+      transition: background .2s, opacity .2s;
+    }
+    button[type="submit"]:hover:not(:disabled) { background: var(--red); }
+    button[type="submit"]:disabled { opacity: .45; cursor: not-allowed; }
+
+    .note { font-size: 11px; font-weight: 300; color: var(--dim); line-height: 1.7; }
+
+    .msg {
+      display: none; padding: 14px 16px; font-size: 13px; line-height: 1.6;
+      border-left: 3px solid var(--black); background: #f7f7f7;
+    }
+    .msg.show { display: block; }
+    .msg.error { border-left-color: var(--red); }
+
+    /* ── Done state ── */
+    .done { display: none; }
+    .done.show { display: block; }
+    .done h1 { margin-bottom: 18px; }
+    body.submitted form, body.submitted .intro { display: none; }
+
+    @media (max-width: 640px) {
+      nav { padding: 14px 20px; }
+      .nav-logo { height: 36px; }
+      main { padding: 36px 20px 56px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo" aria-label="La Familia — home">
+      <img src="https://res.cloudinary.com/dmanxetyl/image/upload/f_auto,q_auto,h_120/v1786551000/lafamilia/logo-full.png" alt="La Familia">
+    </a>
+    <a href="index.html" class="nav-back">Back Home</a>
+  </nav>
+
+  <main>
+    <div class="card">
+
+      <div class="intro">
+        <div class="eyebrow">La Familia · Cape Town · Est. 2014</div>
+        <h1>Sign Up</h1>
+        <p class="lede">
+          Pre-register for early access to every drop. Because of the volume of fraud in
+          the resale market, every member is verified before their first order — so we
+          need your ID or passport number up front.
+        </p>
+      </div>
+
+      <div class="msg" id="msg"></div>
+
+      <form id="form" novalidate>
+        <div class="field">
+          <label for="full_name">Full Name</label>
+          <input id="full_name" name="full_name" type="text" autocomplete="name"
+                 required minlength="2" maxlength="120" placeholder="As it appears on your ID">
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email"
+                 required maxlength="200" placeholder="you@example.com">
+        </div>
+
+        <div class="field">
+          <label for="id_document">ID / Passport Number</label>
+          <input id="id_document" name="id_document" type="text" inputmode="text"
+                 autocomplete="off" required minlength="4" maxlength="40"
+                 placeholder="SA ID or passport number">
+          <span class="hint">
+            Used for verification only, to protect the family against fraudulent orders.
+            Stored securely and never shown publicly.
+          </span>
+        </div>
+
+        <div class="field">
+          <label for="delivery_address">Delivery Address</label>
+          <textarea id="delivery_address" name="delivery_address" autocomplete="shipping street-address"
+                    required minlength="8" maxlength="500"
+                    placeholder="Street, suburb, city, postal code"></textarea>
+        </div>
+
+        <button type="submit" id="submit">Pre-Register</button>
+
+        <p class="note">
+          By pre-registering you agree to us holding these details for order
+          verification and delivery.
+        </p>
+      </form>
+
+      <div class="done" id="done">
+        <div class="eyebrow">Welcome to the family</div>
+        <h1>You're In.</h1>
+        <p class="lede">
+          You're pre-registered. We'll email you before the next drop goes live.
+        </p>
+        <p class="lede"><a href="index.html" style="color:var(--black)">Back to the home page</a></p>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    /* Publishable (anon) key — safe in the browser. The pre_registrations table
+       is insert-only for this role: it can accept a sign-up but cannot read any
+       row back, so nobody's ID number or address is exposed here. */
+    const SUPABASE_URL = 'https://kxszksufcmgucakgwodx.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_0UQsuVelqfe9Aqf8YmyRbQ_q8dG5Rrh';
+
+    const form   = document.getElementById('form');
+    const submit = document.getElementById('submit');
+    const msgEl  = document.getElementById('msg');
+
+    function showMsg(text, isError) {
+      msgEl.textContent = text;
+      msgEl.className = 'msg show' + (isError ? ' error' : '');
+      msgEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        full_name:        form.full_name.value.trim(),
+        email:            form.email.value.trim(),
+        id_document:      form.id_document.value.trim(),
+        delivery_address: form.delivery_address.value.trim(),
+      };
+
+      if (!payload.full_name || payload.full_name.length < 2) {
+        return showMsg('Please enter your full name as it appears on your ID.', true);
+      }
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(payload.email)) {
+        return showMsg('Please enter a valid email address.', true);
+      }
+      if (payload.id_document.length < 4) {
+        return showMsg('Please enter your ID or passport number.', true);
+      }
+      if (payload.delivery_address.length < 8) {
+        return showMsg('Please enter a delivery address we can ship to.', true);
+      }
+
+      submit.disabled = true;
+      submit.textContent = 'Submitting…';
+      msgEl.className = 'msg';
+
+      try {
+        const res = await fetch(SUPABASE_URL + '/rest/v1/pre_registrations', {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.ok) {
+          document.body.classList.add('submitted');
+          msgEl.className = 'msg';
+          document.getElementById('done').classList.add('show');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+
+        /* 409 = the unique index on email; they are already on the list. */
+        if (res.status === 409) {
+          showMsg('That email is already pre-registered — you are on the list.', false);
+        } else {
+          const body = await res.text();
+          console.error('Sign-up failed', res.status, body);
+          showMsg('Something went wrong on our side. Please try again in a moment.', true);
+        }
+      } catch (err) {
+        console.error(err);
+        showMsg('Could not reach the server. Check your connection and try again.', true);
+      } finally {
+        submit.disabled = false;
+        submit.textContent = 'Pre-Register';
+      }
+    });
+  </script>
+</body>
+</html>

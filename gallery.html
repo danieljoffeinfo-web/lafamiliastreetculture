@@ -45,7 +45,17 @@
     .nav-left {
       font-family: 'Anton', sans-serif;
       font-size: 16px; letter-spacing: .12em; text-transform: uppercase; color: var(--black);
+      text-decoration: none; transition: opacity .2s;
     }
+    .nav-left:hover { opacity: .6; }
+    .nav-signup {
+      text-decoration: none;
+      font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--bg); background: var(--black);
+      padding: 11px 26px; transition: background .2s;
+    }
+    .nav-signup:hover { background: var(--red); }
     .nav-links { display: flex; gap: 36px; list-style: none; position: absolute; left: 50%; transform: translateX(-50%); }
     .nav-links a {
       text-decoration: none; font-size: 10px; font-weight: 700;
@@ -232,7 +242,7 @@
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 52px; background: var(--bg);
     }
-    .footer-left {
+    .footer-left { text-decoration: none;
       font-family: 'Anton', sans-serif;
       font-size: 12px; letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
     }
@@ -316,49 +326,27 @@
 </head>
 <body>
 
-  <!-- Nav -->
+  <!-- Nav — the wordmark is the way home now that the nav links are gone -->
   <nav>
-    <div class="nav-left">La Familia</div>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="gallery.html" class="active">Gallery</a></li>
-      <li><a href="#">Contact</a></li>
-    </ul>
+    <a class="nav-left" href="index.html" aria-label="La Familia — home">La Familia</a>
     <div class="nav-right">
-      <a href="#" class="nav-icon" style="text-decoration:none;font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);transition:color .2s;" onmouseenter="this.style.color='#080808'" onmouseleave="this.style.color='#888'">Sign Up</a>
+      <a href="signup.html" class="nav-signup">Sign Up</a>
     </div>
   </nav>
 
-  <!-- Hero — replace hero-bg src with your custom 1920×1080px image -->
+  <!-- Hero -->
   <section class="hero">
     <img class="hero-bg" id="heroBg"
-      src="https://la-familia-six.vercel.app/assets/gallery/Image%2048.jpg"
+      src="https://res.cloudinary.com/dmanxetyl/image/upload/f_auto,q_auto/v1786552164/7E6E88FF-C013-4211-A40A-7C2EA5B9C8DA_emwgaj.jpg"
       alt="La Familia">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <div class="hero-eyebrow">La Familia · Cape Town · Gallery</div>
       <h1 class="hero-title">500+<br>PIECES<br>SOLD.</h1>
       <p class="hero-sub">Est. 2014 · Authenticated · Protected</p>
     </div>
     <div class="hero-count">
-      <span class="hero-count-num">20</span>
+      <span class="hero-count-num" id="heroCount">19</span>
       <span class="hero-count-label">Frames</span>
-    </div>
-    <div class="hero-ticker">
-      <div class="ticker-track">
-        <s>La Familia</s><em>✦</em>
-        <s>Cape Town</s><em>✦</em>
-        <s>Est. 2014</s><em>✦</em>
-        <s>Protect the Family</s><em>✦</em>
-        <s>Authenticated</s><em>✦</em>
-        <s>Limited Release</s><em>✦</em>
-        <s>La Familia</s><em>✦</em>
-        <s>Cape Town</s><em>✦</em>
-        <s>Est. 2014</s><em>✦</em>
-        <s>Protect the Family</s><em>✦</em>
-        <s>Authenticated</s><em>✦</em>
-        <s>Limited Release</s><em>✦</em>
-      </div>
     </div>
   </section>
 
@@ -384,40 +372,17 @@
   <!-- Gallery Header -->
   <div class="gallery-header">
     <span class="gallery-label">Gallery · Lifestyle</span>
-    <span class="gallery-count-label">20 Frames · Cape Town · 2026</span>
+    <span class="gallery-count-label">19 Frames · Cape Town · 2026</span>
   </div>
 
   <!-- Gallery Grid — 20 images -->
-  <div class="gallery-grid" id="galleryGrid">
-    <div class="g-item" data-index="0"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2029.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">01</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="1"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2030.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">02</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="2"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2031.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">03</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="3"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2032.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">04</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="4"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2033.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">05</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="5"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2034.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">06</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="6"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2035.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">07</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="7"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2036.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">08</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="8"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2037.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">09</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="9"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2038.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">10</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="10"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2039.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">11</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="11"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2040.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">12</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="12"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2041.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">13</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="13"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2042.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">14</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="14"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2043.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">15</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="15"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2044.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">16</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="16"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2045.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">17</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="17"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2046.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">18</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="18"><img src="https://la-familia-six.vercel.app/assets/gallery/Image%2047.jpg" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">19</span><span class="g-item-label">La Familia</span></div></div>
-    <div class="g-item" data-index="19"><img src="https://la-familia-six.vercel.app/assets/gallery/432ca666-347e-4af3-9e1b-3a943442df01.JPG" alt="La Familia"><div class="g-item-overlay"><span class="g-item-num">20</span><span class="g-item-label">La Familia</span></div></div>
-  </div>
+  <div class="gallery-grid" id="galleryGrid"></div>
 
   <!-- Footer -->
   <footer>
-    <div class="footer-left">La Familia</div>
+    <a class="footer-left" href="index.html" aria-label="La Familia — home">La Familia</a>
     <nav class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="#">Contact</a>
+      <a href="signup.html">Sign Up</a>
     </nav>
     <div class="footer-right">Cape Town · 2026</div>
   </footer>
@@ -428,22 +393,54 @@
     <img id="lbImg" src="" alt="">
     <button class="lb-nav lb-next" onclick="lbNav(1)">&#8594;</button>
     <button class="lb-close" onclick="closeLightbox()">&#215;</button>
-    <span class="lb-counter" id="lbCounter">1 / 20</span>
+    <span class="lb-counter" id="lbCounter">1 / 19</span>
   </div>
 
   <script>
-    /* Gallery stills are still served from the previous la-familia-six
+    /* Single source of truth for the gallery — the grid below is built from
+       this list, so adding or removing a photo is a one-line change and the
+       numbering can never drift.
+       NOTE: the la-familia-six entries still load from the previous
        deployment. Move them into Cloudinary before that project is removed. */
-    const GALLERY_BASE = 'https://la-familia-six.vercel.app/assets/gallery/';
+    const OLD = 'https://la-familia-six.vercel.app/assets/gallery/';
+    const CLD = 'https://res.cloudinary.com/dmanxetyl/image/upload/f_auto,q_auto/';
     const IMGS = [
-      'Image%2029.jpg','Image%2030.jpg','Image%2031.jpg','Image%2032.jpg',
-      'Image%2033.jpg','Image%2034.jpg','Image%2035.jpg','Image%2036.jpg',
-      'Image%2037.jpg','Image%2038.jpg','Image%2039.jpg','Image%2040.jpg',
-      'Image%2041.jpg','Image%2042.jpg','Image%2043.jpg','Image%2044.jpg',
-      'Image%2045.jpg','Image%2046.jpg','Image%2047.jpg',
-      '432ca666-347e-4af3-9e1b-3a943442df01.JPG',
-    ].map(name => GALLERY_BASE + name);
+      CLD + 'v1786552594/fqs_2026-07-10_2255251_q2ymxe.jpg',
+      OLD + 'Image%2030.jpg',
+      OLD + 'Image%2031.jpg',
+      OLD + 'Image%2032.jpg',
+      OLD + 'Image%2033.jpg',
+      OLD + 'Image%2034.jpg',
+      OLD + 'Image%2035.jpg',
+      OLD + 'Image%2036.jpg',
+      OLD + 'Image%2038.jpg',
+      OLD + 'Image%2039.jpg',
+      OLD + 'Image%2040.jpg',
+      OLD + 'Image%2041.jpg',
+      OLD + 'Image%2042.jpg',
+      OLD + 'Image%2043.jpg',
+      OLD + 'Image%2044.jpg',
+      OLD + 'Image%2045.jpg',
+      OLD + 'Image%2046.jpg',
+      OLD + 'Image%2047.jpg',
+      OLD + '432ca666-347e-4af3-9e1b-3a943442df01.JPG',
+    ];
     let lbIndex = 0;
+
+    /* Build the grid, then keep every count in step with the list length. */
+    document.getElementById('galleryGrid').innerHTML = IMGS.map((src, i) => `
+      <div class="g-item" data-index="${i}">
+        <img src="${src}" alt="La Familia" loading="lazy">
+        <div class="g-item-overlay">
+          <span class="g-item-num">${String(i + 1).padStart(2, '0')}</span>
+          <span class="g-item-label">La Familia</span>
+        </div>
+      </div>`).join('');
+
+    document.getElementById('heroCount').textContent = IMGS.length;
+    document.querySelector('.gallery-count-label').textContent =
+      IMGS.length + ' Frames · Cape Town · 2026';
+    document.getElementById('lbCounter').textContent = '1 / ' + IMGS.length;
 
     document.querySelectorAll('.g-item').forEach(item => {
       item.addEventListener('click', () => openLightbox(parseInt(item.dataset.index)));

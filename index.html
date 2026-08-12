@@ -179,87 +179,6 @@
     }
     .ticker-track em { color: var(--red); font-style: normal; padding: 0 6px; font-size: 12px; }
 
-    /* ─── Car Section ─── */
-    .car-section {
-      height: 500vh; /* ~100vh per second of 5s video */
-      background: var(--white);
-      border-top: 1px solid rgba(0,0,0,.06);
-    }
-
-    .car-sticky {
-      position: sticky; top: 0; height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      overflow: hidden;
-      background: var(--white);
-    }
-
-    #carVideo {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      opacity: 0;
-      transition: opacity .6s ease;
-    }
-
-    #carCanvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-      opacity: 0;
-      transition: opacity .6s ease;
-    }
-
-    /* Car section eyebrow */
-    .car-eyebrow {
-      position: absolute; top: 32px; left: 52px;
-      font-size: 9px; font-weight: 700; letter-spacing: 4px;
-      text-transform: uppercase; color: var(--muted);
-      opacity: 0; transition: opacity .5s;
-    }
-
-    /* View Rentals button — appears bottom-right at end of animation */
-    .btn-rentals {
-      position: absolute; bottom: 140px; right: 52px; z-index: 10;
-      padding: 14px 32px;
-      font-size: 9px; font-weight: 700; letter-spacing: 3.5px;
-      text-transform: uppercase; border: none; cursor: none;
-      background: var(--white); color: var(--black);
-      opacity: 0; transition: opacity .8s ease, transform .3s ease, background .2s;
-    }
-    .btn-rentals:hover { background: var(--red); color: var(--white); transform: translateY(-2px); }
-
-    /* Info bar at bottom */
-    .car-info {
-      position: absolute; bottom: 52px; z-index: 10;
-      left: 0; right: 0;
-      display: flex; justify-content: space-between;
-      padding: 0 52px;
-      opacity: 0; transition: opacity .8s ease;
-    }
-    .car-info span {
-      font-size: 9px; font-weight: 600; letter-spacing: 3px;
-      text-transform: uppercase; color: rgba(255,255,255,.7);
-      text-shadow: 0 1px 8px rgba(0,0,0,.4);
-    }
-    .car-info span b { color: #fff; font-weight: 700; }
-
-    .car-eyebrow { display: none !important; }
-
-    /* Car section ticker */
-    .car-ticker {
-      position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
-      height: 34px; background: var(--black); overflow: hidden;
-      display: flex; align-items: center;
-      opacity: 0; transition: opacity .5s;
-    }
-    .car-ticker .ticker-track { animation: tickerScroll 30s linear infinite; }
-
     /* ─── Keyframes ─── */
     @keyframes fadeIn  { to { opacity: 1; } }
     @keyframes fadeUp  {
@@ -291,14 +210,11 @@
     @media (hover: none), (pointer: coarse) {
       html, body { cursor: auto; }
       #cur-dot, #cur-ring { display: none; }
-      .btn, .btn-rentals, .nav-links a { cursor: pointer !important; }
+      .btn, .nav-links a { cursor: pointer !important; }
     }
 
     /* ─── Tablet ─── */
     @media (max-width: 768px) {
-      #carVideo  { display: none !important; }
-      #carCanvas { display: block; }
-      .car-section, .car-sticky { background: #000; }
       nav { padding: 18px 20px; }
       .nav-links { gap: 20px; }
       .nav-links a { font-size: 9px; letter-spacing: 1.5px; }
@@ -311,10 +227,6 @@
 
       .cta-row { gap: 10px; }
       .btn { padding: 12px 24px; font-size: 8px; letter-spacing: 2.5px; }
-
-      .btn-rentals { right: 20px; bottom: 80px; }
-      .car-info { padding: 0 20px; }
-      .car-info span { font-size: 8px; }
     }
 
     /* ─── Phone ─── */
@@ -335,10 +247,6 @@
       .btn { padding: 13px 36px; }
 
       .ticker-track s { font-size: 8px; letter-spacing: 3px; padding: 0 16px; }
-
-      .car-info { display: none; }
-      .btn-rentals { right: 16px; bottom: 60px; padding: 12px 22px; }
-      .car-info, .car-eyebrow { left: 16px !important; }
     }
   </style>
 </head>
@@ -354,7 +262,7 @@
       <img src="https://res.cloudinary.com/dmanxetyl/image/upload/f_auto,q_auto,h_120/v1786551000/lafamilia/logo-full.png" alt="La Familia">
     </div>
     <ul class="nav-links">
-      <li><a href="#">Sign Up</a></li>
+      <li><a href="signup.html">Sign Up</a></li>
       <li><a href="gallery.html">Gallery</a></li>
       <li><a href="#">Contact</a></li>
     </ul>
@@ -383,8 +291,7 @@
     <span class="side-r">Jordan IV · KAWS</span>
 
     <div class="cta-row">
-      <button class="btn btn-fill">Explore the Drop</button>
-      <button class="btn btn-ghost">Our Story</button>
+      <a class="btn btn-fill" href="signup.html">Sign Up</a>
     </div>
 
     <div class="ticker">
@@ -398,44 +305,6 @@
         <s>Cape Town</s><em>✦</em><s>Moncler</s><em>✦</em>
         <s>Protect the Family</s><em>✦</em><s>Limited Release</s><em>✦</em>
       </div>
-    </div>
-  </section>
-
-  <!-- ── Car Section ── -->
-  <section class="car-section" id="carSection">
-    <div class="car-sticky">
-
-      <div class="car-eyebrow" id="carEyebrow">The Ride &nbsp;·&nbsp; La Familia Series</div>
-
-      <video id="carVideo"
-        src="https://res.cloudinary.com/dmanxetyl/video/upload/f_mp4,vc_h264,w_1920,q_auto/v1786551001/lafamilia/car.mp4"
-        muted playsinline webkit-playsinline preload="auto"
-        crossorigin="anonymous"
-        disablepictureinpicture>
-      </video>
-
-      <!-- Mobile scroll frames (canvas) -->
-      <canvas id="carCanvas"></canvas>
-
-      <button class="btn-rentals" id="btnRentals">View Rentals</button>
-
-      <div class="car-info" id="carInfo">
-        <span>Porsche <b>911 Turbo S</b></span>
-        <span><b>La Familia</b> Edition</span>
-        <span>Cape Town &nbsp;·&nbsp; <b>2026</b></span>
-      </div>
-
-      <div class="car-ticker" id="carTicker">
-        <div class="ticker-track">
-          <s>The Ride</s><em>✦</em><s>911 Turbo S</s><em>✦</em>
-          <s>La Familia Edition</s><em>✦</em><s>Cape Town</s><em>✦</em>
-          <s>White on White</s><em>✦</em><s>Protect the Family</s><em>✦</em>
-          <s>The Ride</s><em>✦</em><s>911 Turbo S</s><em>✦</em>
-          <s>La Familia Edition</s><em>✦</em><s>Cape Town</s><em>✦</em>
-          <s>White on White</s><em>✦</em><s>Protect the Family</s><em>✦</em>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -523,154 +392,6 @@
       requestAnimationFrame(revRaf);
     })();
 
-    /* ════════════════════════════════
-       CAR SECTION — Video scrubber
-    ════════════════════════════════ */
-    const carSection = document.getElementById('carSection');
-    const carVideo   = document.getElementById('carVideo');
-    const carInfo    = document.getElementById('carInfo');
-    const btnRentals = document.getElementById('btnRentals');
-    const carEyebrow = document.getElementById('carEyebrow');
-    const carTicker  = document.getElementById('carTicker');
-
-    if (isTouch) {
-      /* ── Mobile: canvas frame-sequence scroll scrub ── */
-      const canvas = document.getElementById('carCanvas');
-      const ctx    = canvas.getContext('2d');
-      const FRAMES = 66;
-
-      /* Frames are pulled straight off the Cloudinary video as stills
-         (so_<n>p = start offset as a percentage of duration), so there is no
-         separate frame folder to keep in sync with the video. */
-      const frameUrl = i => {
-        const pct = Math.min(99, Math.round((i / (FRAMES - 1)) * 100));
-        return `https://res.cloudinary.com/dmanxetyl/video/upload/so_${pct}p,w_1080,q_auto/v1786551001/lafamilia/car.jpg`;
-      };
-
-      /* DPR-aware resize so canvas buffer matches physical pixels */
-      function resizeCanvas() {
-        const dpr = window.devicePixelRatio || 1;
-        const w   = canvas.offsetWidth  || window.innerWidth;
-        const h   = canvas.offsetHeight || window.innerHeight;
-        canvas.width  = Math.round(w * dpr);
-        canvas.height = Math.round(h * dpr);
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-      }
-      resizeCanvas();
-      window.addEventListener('resize', resizeCanvas, { passive: true });
-
-      /* Preload all frames eagerly */
-      const imgs = Array.from({ length: FRAMES }, (_, i) => {
-        const img = new Image();
-        img.src = frameUrl(i);
-        return img;
-      });
-
-      function drawFrame(idx) {
-        /* Find nearest already-loaded frame if target isn't ready */
-        let i = Math.max(0, Math.min(idx, FRAMES - 1));
-        if (!imgs[i].complete || !imgs[i].naturalWidth) {
-          for (let d = 1; d < FRAMES; d++) {
-            const lo = i - d, hi = i + d;
-            if (lo >= 0 && imgs[lo].complete && imgs[lo].naturalWidth) { i = lo; break; }
-            if (hi < FRAMES && imgs[hi].complete && imgs[hi].naturalWidth) { i = hi; break; }
-          }
-        }
-        const img = imgs[i];
-        if (!img.complete || !img.naturalWidth) return;
-        const cw = canvas.width, ch = canvas.height;
-        const scale = cw / img.naturalWidth;
-        const sw = cw;
-        const sh = img.naturalHeight * scale;
-        const dy = (ch - sh) / 2;
-        ctx.clearRect(0, 0, cw, ch);
-        /* Blurred background — always matches the frame's own colours */
-        ctx.save();
-        ctx.filter = 'blur(40px)';
-        ctx.drawImage(img, -40, dy - 40, sw + 80, sh + 80);
-        ctx.restore();
-        /* Sharp image centred on top */
-        ctx.drawImage(img, 0, dy, sw, sh);
-      }
-
-      let lastIdx = -1;
-
-      function scrubFrames() {
-        const rect  = carSection.getBoundingClientRect();
-        const total = carSection.offsetHeight - window.innerHeight;
-        const rawP  = Math.max(0, Math.min(1, -rect.top / total));
-
-        const visible = rawP > 0.005;
-        canvas.style.opacity     = visible ? '1' : '0';
-        carEyebrow.style.opacity = visible ? '1' : '0';
-
-        if (visible) {
-          const idx = Math.min(Math.floor(rawP * FRAMES), FRAMES - 1);
-          if (idx !== lastIdx) { drawFrame(idx); lastIdx = idx; }
-        }
-
-        const atEnd = rawP > 0.85;
-        carInfo.style.opacity    = atEnd ? '1' : '0';
-        carTicker.style.opacity  = atEnd ? '1' : '0';
-        btnRentals.style.opacity = atEnd ? '1' : '0';
-
-        mobileRafId = requestAnimationFrame(scrubFrames);
-      }
-
-      let mobileRafId = null;
-      new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-          if (!mobileRafId) mobileRafId = requestAnimationFrame(scrubFrames);
-        } else {
-          if (mobileRafId) { cancelAnimationFrame(mobileRafId); mobileRafId = null; }
-        }
-      }, { threshold: 0.01 }).observe(carSection);
-
-    } else {
-      /* ── Desktop: scroll-scrub ── */
-      let videoReady = false;
-      let rawP = 0, smoothP = 0, lastSeek = -1;
-
-      carVideo.addEventListener('canplay', () => { videoReady = true; });
-
-      function getCarProgress() {
-        const rect  = carSection.getBoundingClientRect();
-        const total = carSection.offsetHeight - window.innerHeight;
-        return Math.max(0, Math.min(1, -rect.top / total));
-      }
-
-      function scrubCar() {
-        rawP = getCarProgress();
-        const delta = rawP - smoothP;
-        smoothP += delta * (delta < 0 ? 0.06 : 0.10);
-
-        if (videoReady && carVideo.duration) {
-          const t = smoothP * carVideo.duration;
-          if (Math.abs(t - lastSeek) > 0.008) { carVideo.currentTime = t; lastSeek = t; }
-        }
-
-        const visible = rawP > 0.005;
-        carVideo.style.opacity   = visible ? '1' : '0';
-        carEyebrow.style.opacity = visible ? '1' : '0';
-
-        const atEnd = smoothP > 0.85;
-        carInfo.style.opacity    = atEnd ? '1' : '0';
-        carTicker.style.opacity  = atEnd ? '1' : '0';
-        btnRentals.style.opacity = atEnd ? '1' : '0';
-
-        requestAnimationFrame(scrubCar);
-      }
-
-      let carRafId = null;
-      new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-          if (!carRafId) carRafId = requestAnimationFrame(scrubCar);
-        } else {
-          if (carRafId) { cancelAnimationFrame(carRafId); carRafId = null; }
-        }
-      }, { threshold: 0.01 }).observe(carSection);
-    }
   </script>
 </body>
 </html>
